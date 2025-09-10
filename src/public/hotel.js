@@ -18,40 +18,38 @@ export async function apiHelper(url, method = "GET", body) {
   return response.json();
 }
 
-
-  async function getBookingRoom() {
-  let res = await fetch("/api/booking");
-  return await res.json();
-}
-
-export async function userId() {
+export async function getUserIds() {
   let selectUserId = document.querySelector("#selectUserId");
-  let getRoomNumber = await fetch("/api/user");
-  let getNumber = await getRoomNumber.json();
+  let userIds = await fetch("/api/user");
+  let res = await userIds.json();
 
-  getNumber.forEach((num) => {
+  res.forEach((id) => {
     let option = document.createElement("option");
-    option.value = num.id;
-    option.text = `${num.id}: ${num.name} `;
+    option.value = id.id;
+    option.text = `${id.id}: ${id.name} `;
     selectUserId.appendChild(option);
   });
 }
 
-export async function roomId() {
+export async function getroomIds() {
   let selectRoomId = document.querySelector("#selectRoomId");
-  let getRoomNumber = await fetch("/api/room");
-  let getNumber = await getRoomNumber.json();
+  let roomIds = await fetch("/api/room");
+  let res = await roomIds.json();
 
-  getNumber.forEach((num) => {
+  res.forEach((num) => {
     let option = document.createElement("option");
     option.value = num.id;
     option.text = `room id: ${num.id}`;
     selectRoomId.appendChild(option);
   });
 }
-userId();
-  roomId();
-// booking room 
+getUserIds();
+  getroomIds();
+// booking room
+  async function getBookingRoom() {
+  let res = await fetch("/api/booking");
+  return await res.json();
+}
 
 export async function boookingRoom() {
  const selectUserId = document.querySelector('#selectUserId').value
@@ -63,7 +61,7 @@ const bookingOutDate = document.querySelector('#bookingOutDate').value
   let exists = rooms.some(r => r.userId || r.roomId == selectUserId || selectRoomId);
 
   if (exists) {
-    alert("This room already Book! Please enter a different one.");
+    alert("This room already Book Please enter a different one.");
     return;
   }
 
@@ -143,12 +141,6 @@ function addBookingCard(b) {
     openEditModal(b, cardBox)
   })
 }
-
-
-
-
-
-
 function addBookingCard(b) {
   let parentBox = document.querySelector('.peretnBox')
   let cardBox = document.createElement('div')
@@ -239,7 +231,8 @@ function openEditModal(b, cardBox) {
 async function loadBookings() {
   let bookings = await apiHelper('/api/booking', 'GET')
   let parentBox = document.querySelector('.peretnBox')
-  parentBox.innerHTML = ''
+    parentBox.innerHTML = ''
+
 
   bookings.forEach(b => {
     addBookingCard(b)
