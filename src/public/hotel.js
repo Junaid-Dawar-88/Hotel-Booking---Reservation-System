@@ -18,6 +18,12 @@ export async function apiHelper(url, method = "GET", body) {
   return response.json();
 }
 
+
+  async function getBookingRoom() {
+  let res = await fetch("/api/booking");
+  return await res.json();
+}
+
 export async function userId() {
   let selectUserId = document.querySelector("#selectUserId");
   let getRoomNumber = await fetch("/api/user");
@@ -52,6 +58,17 @@ export async function boookingRoom() {
 const selectRoomId = document.querySelector('#selectRoomId').value
 const bookingInDate = document.querySelector('#bookingInDate').value
 const bookingOutDate = document.querySelector('#bookingOutDate').value
+
+ let rooms = await getBookingRoom();
+  let exists = rooms.some(r => r.userId || r.roomId == selectUserId || selectRoomId);
+
+  if (exists) {
+    alert("This room already Book! Please enter a different one.");
+    return;
+  }
+
+
+
 if (!selectUserId || !selectRoomId || !bookingInDate || !bookingOutDate) {
   alert("Please fill all fields")
   return
@@ -219,12 +236,6 @@ function openEditModal(b, cardBox) {
   })
 }
 
-
-
-
-
-
-
 async function loadBookings() {
   let bookings = await apiHelper('/api/booking', 'GET')
   let parentBox = document.querySelector('.peretnBox')
@@ -303,10 +314,27 @@ roomButton.addEventListener("click", () => {
   addRoomForm.classList.remove("hidden");
 });
 
-export async function addRoom() {
+async function getRooms() {
+  let res = await fetch("/api/room");
+  return await res.json();
+}
 
-  let roomNumber = document.querySelector("#roomNumber").value;
+export async function addRoom() {
+  let roomNumber = document.querySelector("#roomNumber").value.trim();
   let roomType = document.querySelector("#room-type");
+
+  if (!roomNumber) {
+    alert("Please enter a room number");
+    return;
+  }
+
+  let rooms = await getRooms();
+  let exists = rooms.some(r => r.number == roomNumber);
+
+  if (exists) {
+    alert("This room number already exists! Please enter a different one.");
+    return;
+  }
 
   let roomObj = {
     number: roomNumber,
@@ -316,6 +344,7 @@ export async function addRoom() {
   console.log(roomObj);
   return apiHelper("/api/room", "POST", roomObj);
 }
+
 
 const roomSubmit = document.querySelector("#roomSubmit");
 roomSubmit.addEventListener("click", (e) => {
