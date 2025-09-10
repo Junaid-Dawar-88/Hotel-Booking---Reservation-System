@@ -1,0 +1,6 @@
+
+[serve.static]
+plugins = ["bun-plugin-tailwind"]
+
+[install]
+trustedDependencies = ["@prisma/client", "prisma"]

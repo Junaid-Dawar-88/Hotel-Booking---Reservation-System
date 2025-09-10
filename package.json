@@ -1,0 +1,23 @@
+{
+  "name": "hotel-booking-&-reservation-system",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "bun run src/server.ts",
+    "build": "bun build src/server.ts --outdir dist",
+    "start": "bun run dist/server.js"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "prisma": "^6.15.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@prisma/client": "^6.15.0",
+    "bun-plugin-tailwind": "^0.0.15",
+    "tailwindcss": "^4.1.12"
+  }
+}
